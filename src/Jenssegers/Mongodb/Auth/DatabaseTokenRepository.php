@@ -7,30 +7,23 @@ use MongoDB\BSON\UTCDateTime;
 
 class DatabaseTokenRepository extends BaseDatabaseTokenRepository
 {
-    /**
-     * @inheritdoc
-     */
-    protected function getPayload($email, $token)
-    {
-        return ['email' => $email, 'token' => $token, 'created_at' => new UTCDateTime(time() * 1000)];
-    }
 
     /**
      * @inheritdoc
      */
-    protected function tokenExpired($token)
+    protected function tokenExpired($created_at)
     {
         // Convert UTCDateTime to a date string.
-        if ($token['created_at'] instanceof UTCDateTime) {
-            $date = $token['created_at']->toDateTime();
+        if ($created_at instanceof UTCDateTime) {
+            $date = $created_at->toDateTime();
             $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-            $token['created_at'] = $date->format('Y-m-d H:i:s');
-        } elseif (is_array($token['created_at']) and isset($token['created_at']['date'])) {
-            $date = new DateTime($token['created_at']['date'], new DateTimeZone(isset($token['created_at']['timezone']) ? $token['created_at']['timezone'] : 'UTC'));
+            $created_at = $date->format('Y-m-d H:i:s');
+        } elseif (is_array($created_at) and isset($created_at['date'])) {
+            $date = new DateTime($created_at['date'], new DateTimeZone(isset($created_at['timezone']) ? $created_at['timezone'] : 'UTC'));
             $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-            $token['created_at'] = $date->format('Y-m-d H:i:s');
+            $created_at = $date->format('Y-m-d H:i:s');
         }
 
-        return parent::tokenExpired($token);
+        return parent::tokenExpired($created_at);
     }
 }
