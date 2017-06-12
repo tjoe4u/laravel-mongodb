@@ -271,7 +271,7 @@ If you want to use Laravel's native Auth functionality, register this included s
 'Jenssegers\Mongodb\Auth\PasswordResetServiceProvider',
 ```
 
-This service provider will slightly modify the internal DatabaseReminderRepository to add support for MongoDB based password resets. If you don't use password resets, you don't have to register this service provider and everything else should work just fine.
+This service provider will slightly modify the internal DatabaseTokenRepository to add support for MongoDB based password resets. If you don't use password resets, you don't have to register this service provider and everything else should work just fine.
 
 ### Queues
 
